@@ -8,13 +8,42 @@ namespace av2
 {
     internal class Grupo
     {
-        public int? idGrupo {  get; set; }
-        public string? nomeGrupo { get; set; }
+        private int _IDGrupo;
+        public int IDGrupo {
+            get
+            {
+                return _IDGrupo;
+            }
+            private set
+            {
+                _IDGrupo = value;
+            }
+        }
 
-        public int[]? fkidusuario { get; set; }
+        private string _NomeGrupo;
+        public string NomeGrupo {
+            get
+            {
+                return _NomeGrupo;
+            }
+            private set
+            {
+                _NomeGrupo = value;
+            }
+        }
 
-        public bool ativo {  get; set; }
-
+        private int[] _IDContato;
+        public int[] IDContato
+        {
+            get
+            {
+                return _IDContato;
+            }
+            private set
+            {
+                _IDContato = value;
+            }
+        }
 
     }
 }

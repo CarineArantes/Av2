@@ -7,13 +7,72 @@ using System.Text.Json;
 
 namespace av2
 {
-    internal class Contato
+    public class Contato
     {
-        public int? idContato {  get; set; }
-        public string? nome { get; set; }
-        public int? telefone { get; set; }
-        public string? email { get; set; }
-        public int[]? fkidgrupo { get; set; }
-        public bool ativo { get; set; }
+        private int _IDContato;
+        public int IDContato
+        {
+            get {
+                return _IDContato;
+            }
+            private set
+            {
+                _IDContato = value;
+            }
+
+        }
+
+        private string _Nome;
+        public string Nome {
+            get
+            {
+                return _Nome.ToUpper();
+            }
+            private set
+            { 
+                _Nome = value;
+            }
+        }
+
+        private long _Telefone;
+        public long Telefone {
+            get
+            {
+                return _Telefone;
+            }
+            private set
+            {
+                _Telefone = value;
+            }
+        }
+
+        private string _Email;
+        public string Email {
+            get
+            {
+                return _Email;
+            }
+            private set
+            {
+                _Email = value;
+            }
+
+        }
+
+        private int[] _IDGrupo;
+        public int[] IDGrupo {
+            get
+            {
+                return _IDGrupo;
+            }
+            private set
+            {
+                _IDGrupo = value;
+            }
+        }
+
+        public void CriarContato() { 
+            
+        }
     }
 }
