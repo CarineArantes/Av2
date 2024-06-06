@@ -46,11 +46,11 @@ namespace Av2
 
 
 
-        public ContatosJSON BuscaContatos()
+        public EntidadeJSON BuscaContatos()
         {
             string stringJSONS = File.ReadAllText(CaminhoContato);
-            ContatosJSON contatosJSON = JsonSerializer.Deserialize<ContatosJSON>(stringJSONS);
-            return contatosJSON ?? new ContatosJSON();
+            const contatosJSON = JsonSerializer.Deserialize<EntidadeJSON<T>>(stringJSONS);
+            return contatosJSON;
 
         }
 

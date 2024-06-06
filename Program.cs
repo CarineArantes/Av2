@@ -4,9 +4,9 @@
     {
 
 
-        static async Task Main(string[] args)
+        static void Main(string[] args)
         {
-
+            /*
             Gerenciador gerenciador = new Gerenciador();
 
             Contato contato1 = new Contato("Pedro 1", 551799999999, "Pedro@pedro");
@@ -19,7 +19,9 @@
             gerenciador.Salvar(contato3);
             gerenciador.Salvar(contato4);
 
+            */
 
+            //MenuPrincipal();
 
 
 
@@ -37,5 +39,22 @@
             menu.GerarMenu();
 
         }
+
+        static void ExibirContatos()
+        {
+            Gerenciador gerenciador = new Gerenciador();
+            var contatosJSON = gerenciador.BuscaContatos();
+        }
+
+        static void Grupos()
+        {
+
+        }
+
+        static void Sair()
+        {
+
+        }
+
     }
 }
