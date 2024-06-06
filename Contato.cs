@@ -3,76 +3,89 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Text.Json;
 
-namespace av2
+namespace Av2
 {
     public class Contato
     {
-        private int _IDContato;
-        public int IDContato
+        private int _ID;
+        private string _Nome;
+        private long _Telefone;
+        private string _Email;
+        private List<int> _IDGrupo;
+
+
+        public int ID
         {
-            get {
-                return _IDContato;
-            }
-            private set
+            get {return _ID;}
+            set
             {
-                _IDContato = value;
+                _ID = value;
             }
 
         }
-
-        private string _Nome;
-        public string Nome {
+        public string Nome
+        {
             get
+            {return _Nome.ToUpper();}
+            set
             {
-                return _Nome.ToUpper();
-            }
-            private set
-            { 
                 _Nome = value;
             }
         }
-
-        private long _Telefone;
-        public long Telefone {
+        public long Telefone
+        {
             get
-            {
-                return _Telefone;
-            }
-            private set
+            {return _Telefone;}
+            set
             {
                 _Telefone = value;
             }
         }
-
-        private string _Email;
-        public string Email {
+        public string Email
+        {
             get
-            {
-                return _Email;
-            }
-            private set
+            {return _Email;}
+            set
             {
                 _Email = value;
             }
 
         }
 
-        private int[] _IDGrupo;
-        public int[] IDGrupo {
+        public List<int> IDGrupo
+        {
             get
-            {
-                return _IDGrupo;
-            }
-            private set
-            {
-                _IDGrupo = value;
-            }
+            { return _IDGrupo; }
         }
 
-        public void CriarContato() { 
-            
+
+        public Contato(string nome, long telefone, string email)
+        {
+            Nome = nome;
+            Telefone = telefone;
+            Email = email;
+            _IDGrupo = new List<int>();
         }
+
+        // Método para adicionar um ID de grupo
+        public void AddGrupo(int idGrupo)
+        {
+            _IDGrupo.Add(idGrupo);
+        }
+
+        // Método para remover um ID de grupo
+        public void RemoverGrupo(int idGrupo)
+        {
+            _IDGrupo.Remove(idGrupo);
+        }
+
+        public void Exibir()
+        {
+            Console.WriteLine($"\n|CÓDIGO: {ID}| {Nome}");
+            Console.WriteLine($"Telefone: {Telefone}");
+            Console.WriteLine($"Email: {Email}\n");
+        }
+
     }
 }
