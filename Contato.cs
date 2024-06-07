@@ -10,14 +10,15 @@ namespace Av2
     {
         private int _ID;
         private string _Nome;
-        private long _Telefone;
+        private string _Telefone;
         private string _Email;
+        private bool _Ativo;
         private List<int> _IDGrupo;
 
 
         public int ID
         {
-            get {return _ID;}
+            get { return _ID; }
             set
             {
                 _ID = value;
@@ -27,16 +28,16 @@ namespace Av2
         public string Nome
         {
             get
-            {return _Nome.ToUpper();}
+            { return _Nome.ToUpper(); }
             set
             {
                 _Nome = value;
             }
         }
-        public long Telefone
+        public string Telefone
         {
             get
-            {return _Telefone;}
+            { return _Telefone; }
             set
             {
                 _Telefone = value;
@@ -45,12 +46,22 @@ namespace Av2
         public string Email
         {
             get
-            {return _Email;}
+            { return _Email; }
             set
             {
                 _Email = value;
             }
 
+        }
+
+        public bool Ativo
+        {
+            get
+            { return _Ativo; }
+            set
+            {
+                _Ativo = value;
+            }
         }
 
         public List<int> IDGrupo
@@ -60,12 +71,13 @@ namespace Av2
         }
 
 
-        public Contato(string nome, long telefone, string email)
+        public Contato(string nome, string telefone, string email)
         {
             Nome = nome;
             Telefone = telefone;
             Email = email;
             _IDGrupo = new List<int>();
+            Ativo = true;
         }
 
         // Método para adicionar um ID de grupo

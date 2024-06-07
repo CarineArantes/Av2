@@ -9,7 +9,7 @@ namespace Av2
     internal class Menu
     {
         private Dictionary<int, (Action acao, string descricao)> Opcoes;
-        private string ?Titulo;
+        private string? Titulo;
 
         public Menu(string titulo)
         {
@@ -38,7 +38,8 @@ namespace Av2
             bool opcaoInvalida = false;
             do
             {
-                Console.Clear();
+                if(opcaoInvalida)
+                    Console.Clear();
                 if (Titulo != null)
                     Console.WriteLine($"=== {Titulo} === \n");
                 foreach (var opcao in Opcoes)

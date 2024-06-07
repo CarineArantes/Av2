@@ -5,6 +5,8 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.IO;
+using System.Text.RegularExpressions;
+using System.Diagnostics;
 
 
 namespace Av2
@@ -42,15 +44,25 @@ namespace Av2
             }
         }
 
-
-
-
-
-        public EntidadeJSON BuscaContatos()
+        public Contato BuscaContato(int id)
         {
             string stringJSONS = File.ReadAllText(CaminhoContato);
-            const contatosJSON = JsonSerializer.Deserialize<EntidadeJSON<T>>(stringJSONS);
-            return contatosJSON;
+            var contatosJSON = JsonSerializer.Deserialize<EntidadeJSON<Contato>>(stringJSONS);
+            var contato = contatosJSON.Dados.FirstOrDefault(p => p.ID == id && p.Ativo == true);
+            Debug.WriteLine(contato);
+            if (contato != null)
+            {
+                throw new Exception("Contato não encontrado");
+            }
+            return contato;
+
+        }
+
+        public EntidadeJSON<Contato> BuscaContatos()
+        {
+            string stringJSONS = File.ReadAllText(CaminhoContato);
+            var contatosJSON = JsonSerializer.Deserialize<EntidadeJSON<Contato>>(stringJSONS);
+            return contatosJSON ?? new EntidadeJSON<Contato>();
 
         }
 
@@ -78,4 +90,3 @@ namespace Av2
         }
     }
 }
-    
