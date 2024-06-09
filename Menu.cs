@@ -9,11 +9,23 @@ namespace Av2
     internal class Menu
     {
         private Dictionary<int, (Action acao, string descricao)> Opcoes;
-        private string? Titulo;
+        private Action ?Acao;
+        private string ?Titulo;
 
+        public Menu(string titulo, Action acao)
+        {
+            Titulo = titulo;
+            Opcoes = new Dictionary<int, (Action, string)>();
+            Acao = acao;
+        }
         public Menu(string titulo)
         {
             Titulo = titulo;
+            Opcoes = new Dictionary<int, (Action, string)>();
+        }
+        public Menu(Action acao)
+        {
+            Acao = acao;
             Opcoes = new Dictionary<int, (Action, string)>();
         }
         public Menu()
@@ -38,16 +50,18 @@ namespace Av2
             bool opcaoInvalida = false;
             do
             {
-                if(opcaoInvalida)
-                    Console.Clear();
+                Console.Clear();
                 if (Titulo != null)
                     Console.WriteLine($"=== {Titulo} === \n");
+                if (Acao != null) {
+                    Acao();
+                }
                 foreach (var opcao in Opcoes)
                 {
                     Console.WriteLine($"{opcao.Key}. {opcao.Value.descricao}");
                 }
 
-                Console.Write($"\nSelecione uma opção{(opcaoInvalida ? " válida" : "")}:");
+                Console.Write($"\nSelecione uma opção{(opcaoInvalida ? " válida" : "")}: ");
 
                 // Verificando a escolha   
                 if (int.TryParse(Console.ReadLine(), out int escolha))
@@ -69,9 +83,6 @@ namespace Av2
                 }
             } while (opcaoInvalida);
         }
-
-
-
 
     }
 }

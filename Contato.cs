@@ -9,9 +9,9 @@ namespace Av2
     public class Contato
     {
         private int _ID;
-        private string _Nome;
-        private string _Telefone;
-        private string _Email;
+        private string ?_Nome;
+        private string ?_Telefone;
+        private string ?_Email;
         private bool _Ativo;
         private List<int> _IDGrupo;
 
@@ -25,39 +25,10 @@ namespace Av2
             }
 
         }
-        public string Nome
-        {
-            get
-            { return _Nome.ToUpper(); }
-            set
-            {
-                _Nome = value;
-            }
-        }
-        public string Telefone
-        {
-            get
-            { return _Telefone; }
-            set
-            {
-                _Telefone = value;
-            }
-        }
-        public string Email
-        {
-            get
-            { return _Email; }
-            set
-            {
-                _Email = value;
-            }
-
-        }
 
         public bool Ativo
         {
-            get
-            { return _Ativo; }
+            get { return _Ativo; }
             set
             {
                 _Ativo = value;
@@ -68,6 +39,54 @@ namespace Av2
         {
             get
             { return _IDGrupo; }
+        }
+
+        public string Nome
+        {
+            get { return _Nome.ToUpper(); }
+            set
+            {
+                if (value.Length >= 3 && value.Length <= 200)
+                {
+                    _Nome = value;
+                }
+                else
+                {
+                    throw new ArgumentException("O nome precisa ter entre 3 e 200 caracteres.");
+                }
+            }
+        }
+
+        public string Telefone
+        {
+            get { return _Telefone; }
+            set
+            {
+                if (value.Length >= 8 && value.Length <= 13)
+                {
+                    _Telefone = value;
+                }
+                else
+                {
+                    throw new ArgumentException("O telefone precisa ter entre 8 e 13 caracteres.");
+                }
+            }
+        }
+
+        public string Email
+        {
+            get { return _Email; }
+            set
+            {
+                if (value.Length >= 10 && value.Length <= 50)
+                {
+                    _Email = value;
+                }
+                else
+                {
+                    throw new ArgumentException("O e-mail precisa ter entre 10 e 50 caracteres.");
+                }
+            }
         }
 
 
@@ -94,7 +113,7 @@ namespace Av2
 
         public void Exibir()
         {
-            Console.WriteLine($"\n|CÓDIGO: {ID}| {Nome}");
+            Console.WriteLine($"\n[ CÓDIGO: {ID} ] {Nome}");
             Console.WriteLine($"Telefone: {Telefone}");
             Console.WriteLine($"Email: {Email}\n");
         }

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Diagnostics;
+using System.Reflection;
 
 
 namespace Av2
@@ -14,9 +15,9 @@ namespace Av2
     internal class Gerenciador
     {
 
-        private string CaminhoPasta;
-        private string CaminhoContato;
-        private string CaminhoGrupo;
+        private readonly string CaminhoPasta;
+        private readonly string CaminhoContato;
+        private readonly string CaminhoGrupo;
 
         public Gerenciador()
         {
@@ -44,26 +45,82 @@ namespace Av2
             }
         }
 
-        public Contato BuscaContato(int id)
-        {
-            string stringJSONS = File.ReadAllText(CaminhoContato);
-            var contatosJSON = JsonSerializer.Deserialize<EntidadeJSON<Contato>>(stringJSONS);
-            var contato = contatosJSON.Dados.FirstOrDefault(p => p.ID == id && p.Ativo == true);
-            Debug.WriteLine(contato);
-            if (contato != null)
+        private static EntidadeJSON<T> BuscaDados<T>(string caminho) {
+            try
             {
-                throw new Exception("Contato não encontrado");
+                string stringJSONS = File.ReadAllText(caminho);
+                var dadosJSON = JsonSerializer.Deserialize<EntidadeJSON<T>>(stringJSONS);
+                return dadosJSON ?? new EntidadeJSON<T>();
             }
-            return contato;
-
+            catch{
+                throw new Exception("Erro ao buscar dados !");
+            }  
         }
+
+        private static void SalvaDados<T>(string caminho, EntidadeJSON<T> dadosJSON)
+        {
+            try
+            {
+                string stringJSONS = File.ReadAllText(caminho);
+                stringJSONS = JsonSerializer.Serialize(dadosJSON);
+                File.WriteAllText(caminho, stringJSONS);
+            }
+            catch
+            {
+                throw new Exception("Erro ao salvar dados !");
+            }
+        }
+
+
 
         public EntidadeJSON<Contato> BuscaContatos()
         {
-            string stringJSONS = File.ReadAllText(CaminhoContato);
-            var contatosJSON = JsonSerializer.Deserialize<EntidadeJSON<Contato>>(stringJSONS);
-            return contatosJSON ?? new EntidadeJSON<Contato>();
+            try
+            {
+                string stringJSONS = File.ReadAllText(CaminhoContato);
+                var contatosJSON = JsonSerializer.Deserialize<EntidadeJSON<Contato>>(stringJSONS);
+                // Verificar se contatosJSON é nulo ou não possui dados
+                if (contatosJSON == null || contatosJSON.Dados == null)
+                {
+                    return new EntidadeJSON<Contato>();
+                }
+                // Filtrar todos os contatos ativos
+                var contatosAtivos = contatosJSON.Dados.Where(p => p.Ativo).ToList();
+                // Criar um novo objeto EntidadeJSON com os contatos ativos encontrados
+                var resultado = new EntidadeJSON<Contato>
+                {
+                    Dados = contatosAtivos
+                };
+                return resultado;
+            }
+            catch
+            {
+                throw new Exception("Erro ao Buscar Contatos!");
+            }
+        }
 
+        public Contato BuscaContatos(int id)
+        {
+            try
+            {
+                var contatosJSON = BuscaContatos();
+                var contato = contatosJSON.Dados.FirstOrDefault(p => p.ID == id);
+                return contato;
+            }
+            catch{
+                throw new Exception("Erro ao Buscar Contato !");
+            }   
+        }
+
+        public static bool  IDeNulo<T>(T item)
+        {
+            PropertyInfo propriedadeId = typeof(T).GetProperty("ID");
+            if (propriedadeId != null)
+            {
+                object id = propriedadeId.GetValue(item);
+                return id == null || (id is int && (int)id == 0);
+            }
+            return true;
         }
 
         public void Salvar(Contato contato)
@@ -76,17 +133,71 @@ namespace Av2
             Salvar<Grupo>(grupo, CaminhoGrupo);
         }
 
-
-        private static void Salvar<T>(T item, string caminho)
+        private void Salvar<T>(T item, string caminho)
         {
-            string stringJSONS = File.ReadAllText(caminho);
-            var dadosJSON = JsonSerializer.Deserialize<EntidadeJSON<T>>(stringJSONS);
-            int id = dadosJSON.UltimoAdicionado + 1;
-            item.GetType().GetProperty("ID").SetValue(item, id);
-            dadosJSON.UltimoAdicionado = id;
-            dadosJSON.Dados.Add(item);
-            stringJSONS = JsonSerializer.Serialize(dadosJSON);
-            File.WriteAllText(caminho, stringJSONS);
+            try
+            {
+                if (item != null) {
+                    if (IDeNulo<T>(item)) {
+                        AdicionarItem(item, caminho);
+                    }
+                    else {
+                        AtualizarItem(item, caminho);
+                    }
+                }
+                else{
+                    throw new Exception("Erro ao salvar !");
+                }            
+            }
+            catch(Exception ex) {
+                throw new Exception(ex.Message ?? "Error ao salvar");
+            }   
         }
+
+        private static void AdicionarItem<T>(T item, string caminho) {
+            try
+            {
+                var dadosJSON = BuscaDados<T>(caminho);
+                int novoID = dadosJSON.UltimoAdicionado + 1;
+                item?.GetType()?.GetProperty("ID")?.SetValue(item, novoID);
+                dadosJSON.UltimoAdicionado = novoID;
+                dadosJSON.Dados.Add(item);
+                SalvaDados<T>(caminho, dadosJSON);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message ?? "Error ao salvar");
+            }        
+        }
+
+        private static void AtualizarItem<T>(T item, string caminho)
+        {
+            try
+            {
+                var dadosJSON = BuscaDados<T>(caminho);
+                PropertyInfo propriedadeId = typeof(T).GetProperty("ID");
+                if (propriedadeId != null)
+                {
+                    object itemID = propriedadeId.GetValue(item);
+                    var itemExistente = dadosJSON.Dados.FirstOrDefault(x => propriedadeId.GetValue(x).Equals(itemID));
+                    if (itemExistente != null)
+                    {
+                        int indice = dadosJSON.Dados.IndexOf(itemExistente);
+                        dadosJSON.Dados[indice] = item;
+                    }
+                    else
+                    {
+                        dadosJSON.Dados.Add(item);
+                    }
+                    SalvaDados<T>(caminho, dadosJSON);
+                }
+            }
+            catch (Exception ex)
+            {
+                do { } while (true);
+                throw new Exception(ex.Message ?? "Error ao Atualizar");
+            }
+        }
+
     }
 }
