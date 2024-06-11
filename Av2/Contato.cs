@@ -13,8 +13,6 @@ namespace Av2
         private string _Telefone;
         private string _Email;
         private bool _Ativo;
-        private List<int> _IDGrupo;
-
 
         public int ID
         {
@@ -33,12 +31,6 @@ namespace Av2
             {
                 _Ativo = value;
             }
-        }
-
-        public List<int> IDGrupo
-        {
-            get
-            { return _IDGrupo; }
         }
 
         public string Nome
@@ -100,18 +92,6 @@ namespace Av2
             Email = email;
             _IDGrupo = new List<int>();
             Ativo = true;
-        }
-
-        // Método para adicionar um ID de grupo
-        public void AddGrupo(int idGrupo)
-        {
-            _IDGrupo.Add(idGrupo);
-        }
-
-        // Método para remover um ID de grupo
-        public void RemoverGrupo(int idGrupo)
-        {
-            _IDGrupo.Remove(idGrupo);
         }
 
         public void Exibir()
