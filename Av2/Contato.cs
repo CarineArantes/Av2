@@ -90,7 +90,6 @@ namespace Av2
             Nome = nome;
             Telefone = telefone;
             Email = email;
-            _IDGrupo = new List<int>();
             Ativo = true;
         }
 
